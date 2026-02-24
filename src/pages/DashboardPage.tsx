@@ -18,6 +18,7 @@ interface PasswordEntry {
   username: string;
   password: string;
   category: string;
+  icon?: string;
   url?: string;
 }
 

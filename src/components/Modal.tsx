@@ -8,6 +8,7 @@ interface PasswordEntry {
   username: string;
   password: string;
   category: string;
+  icon?: string;
 }
 
 interface ModalProps {
@@ -18,13 +19,13 @@ interface ModalProps {
 }
 
 const Modal = ({ isOpen, onClose, onSave, editData }: ModalProps) => {
-  const [form, setForm] = useState({ service: "", username: "", password: "", category: "Social" });
+  const [form, setForm] = useState({ service: "", username: "", password: "", category: "Social", icon: "🔒" });
 
   useEffect(() => {
     if (editData) {
-      setForm({ service: editData.service, username: editData.username, password: editData.password, category: editData.category });
+      setForm({ service: editData.service, username: editData.username, password: editData.password, category: editData.category, icon: editData.icon || "🔒" });
     } else {
-      setForm({ service: "", username: "", password: "", category: "Social" });
+      setForm({ service: "", username: "", password: "", category: "Social", icon: "🔒" });
     }
   }, [editData, isOpen]);
 
@@ -50,9 +51,18 @@ const Modal = ({ isOpen, onClose, onSave, editData }: ModalProps) => {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-3">
-          <input
-            type="text"
-            placeholder="Service name"
+          <div className="flex gap-3">
+            <input
+              type="text"
+              placeholder="🔒"
+              value={form.icon}
+              onChange={(e) => setForm({ ...form, icon: e.target.value })}
+              className="vault-input w-16 text-center text-xl"
+              maxLength={2}
+            />
+            <input
+              type="text"
+              placeholder="Service name"
             value={form.service}
             onChange={(e) => setForm({ ...form, service: e.target.value })}
             className="vault-input"
@@ -63,9 +73,10 @@ const Modal = ({ isOpen, onClose, onSave, editData }: ModalProps) => {
             placeholder="Username or email"
             value={form.username}
             onChange={(e) => setForm({ ...form, username: e.target.value })}
-            className="vault-input"
-            required
-          />
+              className="vault-input flex-1"
+              required
+            />
+          </div>
           <input
             type="text"
             placeholder="Password"

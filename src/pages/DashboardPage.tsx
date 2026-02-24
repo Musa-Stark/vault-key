@@ -10,6 +10,7 @@ import { ShieldOff, Settings } from "lucide-react";
 
 interface DashboardPageProps {
   onLock: () => void;
+  onLogout: () => void;
 }
 
 interface PasswordEntry {
@@ -22,7 +23,7 @@ interface PasswordEntry {
   url?: string;
 }
 
-const DashboardPage = ({ onLock }: DashboardPageProps) => {
+const DashboardPage = ({ onLock, onLogout }: DashboardPageProps) => {
   const [passwords, setPasswords] = useState<PasswordEntry[]>(dummyPasswords);
   const [activeView, setActiveView] = useState("passwords");
   const [activeCategory, setActiveCategory] = useState("All");
@@ -84,6 +85,7 @@ const DashboardPage = ({ onLock }: DashboardPageProps) => {
           onSearchChange={setSearchQuery}
           onLock={onLock}
           onAddNew={handleAddNew}
+          onLogout={onLogout}
         />
 
         <main className="flex-1 p-4 lg:p-6">

@@ -9,11 +9,12 @@ interface PasswordCardProps {
   username: string;
   password: string;
   category: string;
+  icon?: string;
   onEdit: (id: string) => void;
   onDelete: (id: string) => void;
 }
 
-const PasswordCard = ({ id, service, username, password, category, onEdit, onDelete }: PasswordCardProps) => {
+const PasswordCard = ({ id, service, username, password, category, icon, onEdit, onDelete }: PasswordCardProps) => {
   const [visible, setVisible] = useState(false);
   const [copied, setCopied] = useState(false);
   const { showToast } = useToast();
@@ -29,7 +30,7 @@ const PasswordCard = ({ id, service, username, password, category, onEdit, onDel
     <div className="vault-card group">
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center gap-3">
-          <span className="text-2xl">{serviceIcons[service] || "🔒"}</span>
+          <span className="text-2xl">{icon || serviceIcons[service] || "🔒"}</span>
           <div>
             <h3 className="font-semibold text-foreground text-sm">{service}</h3>
             <p className="text-xs text-muted-foreground">{username}</p>

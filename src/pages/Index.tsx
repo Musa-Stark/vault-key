@@ -7,7 +7,7 @@ import UnlockPage from "@/pages/UnlockPage";
 import DashboardPage from "@/pages/DashboardPage";
 
 const AppContent = () => {
-  const { authState, login, unlock, lock } = useAuth();
+  const { authState, login, logout, unlock, lock } = useAuth();
   const [showRegister, setShowRegister] = useState(false);
 
   if (authState === "login") {
@@ -22,7 +22,7 @@ const AppContent = () => {
     return <UnlockPage onUnlock={unlock} />;
   }
 
-  return <DashboardPage onLock={lock} />;
+  return <DashboardPage onLock={lock} onLogout={logout} />;
 };
 
 const Index = () => (

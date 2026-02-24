@@ -1,14 +1,36 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState } from "react";
+import { AuthProvider, useAuth } from "@/contexts/AuthContext";
+import { ToastProvider } from "@/contexts/ToastContext";
+import LoginPage from "@/pages/LoginPage";
+import RegisterPage from "@/pages/RegisterPage";
+import UnlockPage from "@/pages/UnlockPage";
+import DashboardPage from "@/pages/DashboardPage";
 
-const Index = () => {
-  return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
-    </div>
-  );
+const AppContent = () => {
+  const { authState, login, unlock, lock } = useAuth();
+  const [showRegister, setShowRegister] = useState(false);
+
+  if (authState === "login") {
+    return showRegister ? (
+      <RegisterPage onRegister={login} onSwitchToLogin={() => setShowRegister(false)} />
+    ) : (
+      <LoginPage onLogin={login} onSwitchToRegister={() => setShowRegister(true)} />
+    );
+  }
+
+  if (authState === "locked") {
+    return <UnlockPage onUnlock={unlock} />;
+  }
+
+  return <DashboardPage onLock={lock} />;
 };
+
+const Index = () => (
+  <AuthProvider>
+    <ToastProvider>
+      <AppContent />
+    </ToastProvider>
+  </AuthProvider>
+);
 
 export default Index;

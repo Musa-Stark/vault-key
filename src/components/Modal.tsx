@@ -63,20 +63,20 @@ const Modal = ({ isOpen, onClose, onSave, editData }: ModalProps) => {
             <input
               type="text"
               placeholder="Service name"
-            value={form.service}
-            onChange={(e) => setForm({ ...form, service: e.target.value })}
-            className="vault-input"
-            required
-          />
+              value={form.service}
+              onChange={(e) => setForm({ ...form, service: e.target.value })}
+              className="vault-input flex-1"
+              required
+            />
+          </div>
           <input
             type="text"
             placeholder="Username or email"
             value={form.username}
             onChange={(e) => setForm({ ...form, username: e.target.value })}
-              className="vault-input flex-1"
-              required
-            />
-          </div>
+            className="vault-input"
+            required
+          />
           <input
             type="text"
             placeholder="Password"

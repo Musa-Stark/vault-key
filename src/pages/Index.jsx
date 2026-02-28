@@ -4,12 +4,15 @@ import { ToastProvider } from "@/contexts/ToastContext";
 import LoginPage from "@/pages/LoginPage";
 import RegisterPage from "@/pages/RegisterPage";
 import UnlockPage from "@/pages/UnlockPage";
+import VerifyingPage from "@/pages/VerifyingPage";
 import DashboardPage from "@/pages/DashboardPage";
 const AppContent = () => {
   const { authState, login, logout, unlock, lock } = useAuth();
   const [showRegister, setShowRegister] = useState(false);
 
-  // authState = "locked"
+  if (authState === "checking") {
+    return <VerifyingPage />;
+  }
 
   if (authState === "login") {
     return showRegister ? (

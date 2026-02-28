@@ -1,21 +1,15 @@
-import { useEffect, useState } from "react";
-import { Lock, Mail, ArrowRight } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Lock, Mail, ArrowRight, Loader2 } from "lucide-react";
 import { apiCall } from "@/lib/apiRequest";
 import { useToast } from "@/contexts/ToastContext";
 
 const LoginPage = ({ onLogin, onSwitchToRegister }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isDisabled, setIsDisabled] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { showToast } = useToast();
 
-  useEffect(() => {
-    if (!email || !password) {
-      setIsDisabled(true);
-    } else {
-      setIsDisabled(false);
-    }
-  }, [email, password]);
+  const isDisabled = !email || !password || isSubmitting;
 
   useEffect(() => {
     const sendToken = async () => {
@@ -24,7 +18,7 @@ const LoginPage = ({ onLogin, onSwitchToRegister }) => {
         onLogin();
       } else {
         showToast(response.message, "fail");
-        localStorage.removeItem("token")
+        localStorage.removeItem("token");
       }
     };
     const token = localStorage.getItem("token");
@@ -35,19 +29,25 @@ const LoginPage = ({ onLogin, onSwitchToRegister }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (isDisabled) return;
+
     const data = { email, password };
-    setIsDisabled(true);
+    setIsSubmitting(true);
 
-    const response = await apiCall(data, "POST", "/auth/login");
+    try {
+      const response = await apiCall(data, "POST", "/auth/login");
 
-    if (response.success) {
-      localStorage.setItem("token", response.data.token);
-      showToast("Logged In successfully");
-      onLogin();
-      setEmail("");
-      setPassword("");
-    } else {
-      showToast(response.message, "fail");
+      if (response.success) {
+        localStorage.setItem("token", response.data.token);
+        showToast("Logged In successfully");
+        onLogin();
+        setEmail("");
+        setPassword("");
+      } else {
+        showToast(response.message, "fail");
+      }
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -102,7 +102,16 @@ const LoginPage = ({ onLogin, onSwitchToRegister }) => {
             className={`vault-btn-primary w-full flex items-center justify-center gap-2 ${isDisabled && "opacity-50 hover:scale-100 cursor-not-allowed"}`}
             disabled={isDisabled}
           >
-            Sign In <ArrowRight className="w-4 h-4" />
+            {isSubmitting ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                Signing In...
+              </>
+            ) : (
+              <>
+                Sign In <ArrowRight className="w-4 h-4" />
+              </>
+            )}
           </button>
 
           <p className="text-center text-sm text-muted-foreground">

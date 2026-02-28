@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Eye, EyeOff, Copy, Pencil, Trash2, Check } from "lucide-react";
+import { Eye, EyeOff, Copy, Pencil, Trash2, Check, Loader2 } from "lucide-react";
 import { serviceIcons } from "@/data/passwords";
 import { useToast } from "@/contexts/ToastContext";
 const PasswordCard = ({
@@ -11,6 +11,7 @@ const PasswordCard = ({
   icon,
   onEdit,
   onDelete,
+  isDeleting = false,
 }) => {
   const [visible, setVisible] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -70,9 +71,18 @@ const PasswordCard = ({
         </button>
         <button
           onClick={() => onDelete(_id)}
-          className="vault-btn-ghost text-xs flex items-center gap-1 !text-destructive"
+          disabled={isDeleting}
+          className={`vault-btn-ghost text-xs flex items-center gap-1 !text-destructive ${isDeleting ? "opacity-50 cursor-not-allowed" : ""}`}
         >
-          <Trash2 className="w-3 h-3" /> Delete
+          {isDeleting ? (
+            <>
+              <Loader2 className="w-3 h-3 animate-spin" /> Deleting...
+            </>
+          ) : (
+            <>
+              <Trash2 className="w-3 h-3" /> Delete
+            </>
+          )}
         </button>
       </div>
     </div>

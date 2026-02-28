@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { Lock, Mail, User, ArrowRight } from "lucide-react";
+import { useState } from "react";
+import { Lock, Mail, User, ArrowRight, Loader2 } from "lucide-react";
 import { apiCall } from "@/lib/apiRequest";
 import { useToast } from "@/contexts/ToastContext";
 
@@ -8,34 +8,35 @@ const RegisterPage = ({ onRegister, onSwitchToLogin }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [masterPassword, setMasterPassword] = useState("");
-  const [isDisabled, setIsDisabled] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { showToast } = useToast();
 
-  useEffect(() => {
-    if (!name || !email || !password || !masterPassword) {
-      setIsDisabled(true);
-    } else {
-      setIsDisabled(false);
-    }
-  }, [name, email, password, masterPassword]);
+  const isDisabled =
+    !name || !email || !password || !masterPassword || isSubmitting;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (isDisabled) return;
+
     const data = { name, email, password, masterPassword };
 
-    setIsDisabled(true);
+    setIsSubmitting(true);
 
-    const response = await apiCall(data, "POST", "/auth/register");
-    if (response.success) {
-      localStorage.setItem("token", response.data.token);
-      showToast("Registered successfully");
-      setName("");
-      setEmail("");
-      setPassword("");
-      setMasterPassword("");
-      onRegister();
-    } else {
-      showToast(response.message, "fail");
+    try {
+      const response = await apiCall(data, "POST", "/auth/register");
+      if (response.success) {
+        localStorage.setItem("token", response.data.token);
+        showToast("Registered successfully");
+        setName("");
+        setEmail("");
+        setPassword("");
+        setMasterPassword("");
+        onRegister();
+      } else {
+        showToast(response.message, "fail");
+      }
+    } finally {
+      setIsSubmitting(false);
     }
   };
   return (
@@ -111,7 +112,16 @@ const RegisterPage = ({ onRegister, onSwitchToLogin }) => {
             className={`vault-btn-primary w-full flex items-center justify-center gap-2 ${isDisabled && "opacity-50 hover:scale-100 cursor-not-allowed"}`}
             disabled={isDisabled}
           >
-            Create Account <ArrowRight className="w-4 h-4" />
+            {isSubmitting ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                Creating Account...
+              </>
+            ) : (
+              <>
+                Create Account <ArrowRight className="w-4 h-4" />
+              </>
+            )}
           </button>
 
           <p className="text-center text-sm text-muted-foreground">

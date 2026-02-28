@@ -5,8 +5,9 @@ import {
   useEffect,
   useCallback,
 } from "react";
+import { apiCall } from "@/lib/apiRequest";
 const AuthContext = createContext({
-  authState: "login",
+  authState: "checking",
   vaultItems: [],
   unlockData: null,
   setVaultItems: () => {},
@@ -32,11 +33,46 @@ const getVaultItemsFromUnlockPayload = (payload) => {
 };
 
 export const AuthProvider = ({ children }) => {
-  const [authState, setAuthState] = useState("login");
+  const [authState, setAuthState] = useState("checking");
   const [vaultItems, setVaultItems] = useState([]);
   const [unlockData, setUnlockData] = useState(null);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const verifyToken = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setAuthState("login");
+        return;
+      }
+
+      try {
+        const response = await apiCall("", "GET", "/auth/token");
+        if (cancelled) return;
+
+        if (response?.success) {
+          setAuthState("locked");
+        } else {
+          localStorage.removeItem("token");
+          setAuthState("login");
+        }
+      } catch {
+        if (cancelled) return;
+        localStorage.removeItem("token");
+        setAuthState("login");
+      }
+    };
+
+    verifyToken();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   const login = useCallback(() => setAuthState("locked"), []);
   const logout = useCallback(() => {
+    localStorage.removeItem("token");
     setVaultItems([]);
     setUnlockData(null);
     setAuthState("login");

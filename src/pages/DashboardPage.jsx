@@ -6,7 +6,7 @@ import Modal from "@/components/Modal";
 import Generator from "@/components/Generator";
 import { useToast } from "@/contexts/ToastContext";
 import { useAuth } from "@/contexts/AuthContext";
-import { ShieldOff, Settings } from "lucide-react";
+import { ShieldOff, Settings, Loader2 } from "lucide-react";
 import { apiCall } from "@/lib/apiRequest";
 
 const DashboardPage = ({ onLock, onLogout }) => {
@@ -23,6 +23,8 @@ const DashboardPage = ({ onLock, onLogout }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [editData, setEditData] = useState(null);
   const [isEdit, setIsEdit] = useState(false);
+  const [isFetchingPasswords, setIsFetchingPasswords] = useState(true);
+  const [deletingId, setDeletingId] = useState(null);
   const { showToast } = useToast();
 
   const filtered = useMemo(() => {
@@ -49,9 +51,8 @@ const DashboardPage = ({ onLock, onLogout }) => {
 
     if (!response.success) {
       showToast(response.message, "fail");
+      return false;
     } else {
-      showToast("Password added");
-
       setPasswords((prev) => {
         const exists = prev.find((p) => p._id === data._id);
 
@@ -67,7 +68,11 @@ const DashboardPage = ({ onLock, onLogout }) => {
 
       if (wasUpdate) {
         showToast("Password updated");
+      } else {
+        showToast("Password added");
       }
+
+      return true;
     }
   };
 
@@ -80,14 +85,22 @@ const DashboardPage = ({ onLock, onLogout }) => {
     }
   };
   const handleDelete = async (_id) => {
-    const item = passwords.find((p) => p._id === _id);
-    const response = await apiCall(item, "DELETE", "/password");
+    if (deletingId) return;
 
-    if (response.success) {
-      setPasswords((prev) => prev.filter((p) => p._id !== _id));
-      showToast("Password deleted");
-    } else {
-      showToast(response.message, "fail");
+    const item = passwords.find((p) => p._id === _id);
+    setDeletingId(_id);
+
+    try {
+      const response = await apiCall(item, "DELETE", "/password");
+
+      if (response.success) {
+        setPasswords((prev) => prev.filter((p) => p._id !== _id));
+        showToast("Password deleted");
+      } else {
+        showToast(response.message, "fail");
+      }
+    } finally {
+      setDeletingId(null);
     }
   };
 
@@ -103,11 +116,16 @@ const DashboardPage = ({ onLock, onLogout }) => {
 
   useEffect(() => {
     const fetchVaultItems = async () => {
-      const response = await apiCall("", "GET", "/password");
-      if (!response.success) {
-        showToast(response.message, "fail");
-      } else {
-        setPasswords(response.data.reverse());
+      setIsFetchingPasswords(true);
+      try {
+        const response = await apiCall("", "GET", "/password");
+        if (!response.success) {
+          showToast(response.message, "fail");
+        } else {
+          setPasswords(response.data.reverse());
+        }
+      } finally {
+        setIsFetchingPasswords(false);
       }
     };
     fetchVaultItems();
@@ -149,7 +167,17 @@ const DashboardPage = ({ onLock, onLogout }) => {
                 </div>
               </div>
 
-              {passwords && filtered.length === 0 ? (
+              {isFetchingPasswords ? (
+                <div className="flex flex-col items-center justify-center py-20 text-center">
+                  <Loader2 className="w-8 h-8 text-muted-foreground mb-4 animate-spin" />
+                  <h3 className="text-lg font-semibold text-foreground mb-1">
+                    Fetching passwords
+                  </h3>
+                  <p className="text-sm text-muted-foreground">
+                    Please wait while we load your vault
+                  </p>
+                </div>
+              ) : passwords && filtered.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-20 text-center">
                   <ShieldOff className="w-12 h-12 text-muted-foreground mb-4" />
                   <h3 className="text-lg font-semibold text-foreground mb-1">
@@ -168,6 +196,7 @@ const DashboardPage = ({ onLock, onLogout }) => {
                         {...p}
                         onEdit={handleEdit}
                         onDelete={handleDelete}
+                        isDeleting={deletingId === p._id}
                       />
                     ))}
                 </div>

@@ -1,34 +1,34 @@
-import { useState, useEffect } from "react";
-import { Lock, ShieldCheck } from "lucide-react";
+import { useState } from "react";
+import { Lock, ShieldCheck, Loader2 } from "lucide-react";
 import { apiCall } from "@/lib/apiRequest";
 import { useToast } from "@/contexts/ToastContext";
 
 const UnlockPage = ({ onUnlock }) => {
   const [masterPassword, setMasterPassword] = useState("");
-  const [isDisabled, setIsDisabled] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { showToast } = useToast();
 
-  useEffect(() => {
-    if (!masterPassword) {
-      setIsDisabled(true);
-    } else {
-      setIsDisabled(false);
-    }
-  }, [masterPassword]);
+  const isDisabled = !masterPassword || isSubmitting;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsDisabled(true);
+    if (isDisabled) return;
 
-    const data = { masterPassword };
-    const response = await apiCall(data, "POST", "/auth/unlock");
+    setIsSubmitting(true);
 
-    if (response?.success) {
-      showToast("Unlocked successfully");
-      setMasterPassword("");
-      onUnlock(response?.data ?? null);
-    } else {
-      showToast(response.message, "fail");
+    try {
+      const data = { masterPassword };
+      const response = await apiCall(data, "POST", "/auth/unlock");
+
+      if (response?.success) {
+        showToast("Unlocked successfully");
+        setMasterPassword("");
+        onUnlock(response?.data ?? null);
+      } else {
+        showToast(response.message, "fail");
+      }
+    } finally {
+      setIsSubmitting(false);
     }
   };
   return (
@@ -63,7 +63,14 @@ const UnlockPage = ({ onUnlock }) => {
             className={`vault-btn-primary w-full flex items-center justify-center gap-2 ${isDisabled && "opacity-50 hover:scale-100 cursor-not-allowed"}`}
             disabled={isDisabled}
           >
-            Unlock Vault
+            {isSubmitting ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                Unlocking...
+              </>
+            ) : (
+              "Unlock Vault"
+            )}
           </button>
         </form>
       </div>

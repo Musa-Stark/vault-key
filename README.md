@@ -1,73 +1,113 @@
-# Welcome to your Lovable project
+# Vault Key (Client)
 
-## Project info
+A modern client-side password vault frontend built with Next.js App Router, React, and Tailwind CSS.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+This repository contains the UI application only. Backend/server logic is intentionally handled in a separate project.
 
-## How can I edit this code?
+## Overview
 
-There are several ways of editing your application.
+Vault Key provides a complete frontend flow for:
+- Account registration and login screens
+- Vault lock/unlock flow
+- Password dashboard with search and category filters
+- Add, edit, and delete password entries
+- Built-in password generator
+- Toast notifications and responsive layout
 
-**Use Lovable**
+The app communicates with an external API using `NEXT_PUBLIC_API_URL`.
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+## Tech Stack
 
-Changes made via Lovable will be committed automatically to this repo.
+- `Next.js` (App Router)
+- `React 18`
+- `Tailwind CSS`
+- `@tanstack/react-query`
+- `lucide-react`
+- Shadcn/Radix UI primitives
+- `Vitest` + Testing Library
 
-**Use your preferred IDE**
+## Project Structure
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+```text
+app/
+  layout.jsx
+  page.jsx
+  globals.css
+  not-found.jsx
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+src/
+  components/        # UI building blocks (navbar, sidebar, cards, modal, generator)
+  contexts/          # Auth and toast state providers
+  data/              # Static UI data (categories, fallback icons)
+  hooks/             # Shared hooks
+  lib/               # API request helper and utilities
+  pages/             # Screen-level UI (login/register/unlock/dashboard)
+  test/              # Vitest setup and sample tests
+```
 
-Follow these steps:
+## Prerequisites
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+- `Node.js 18+` (recommended: latest LTS)
+- `npm` (or compatible package manager)
+- Running backend API from your separate server project
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+## Environment Variables
 
-# Step 3: Install the necessary dependencies.
-npm i
+Create a local env file:
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+```bash
+cp .env.example .env.local
+```
+
+Required for this client:
+
+- `NEXT_PUBLIC_API_URL`  
+  Example: `http://localhost:4000/api/v1`
+
+Note: Other values in `.env.example` may belong to server concerns and are not required by this client runtime.
+
+## Getting Started
+
+```bash
+npm install
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+App will run at `http://localhost:3000`.
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## Available Scripts
 
-**Use GitHub Codespaces**
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run start` - Start production server
+- `npm run lint` - Run lint checks
+- `npm run test` - Run tests once
+- `npm run test:watch` - Run tests in watch mode
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## Backend API Contract Used by This Client
 
-## What technologies are used for this project?
+Base URL: `NEXT_PUBLIC_API_URL`
 
-This project is built with:
+The frontend currently calls:
+- `POST /auth/register`
+- `POST /auth/login`
+- `GET /auth/token`
+- `POST /auth/unlock`
+- `GET /password`
+- `POST /password`
+- `PATCH /password`
+- `DELETE /password`
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+If your server differs, update frontend API calls in:
+- `src/lib/apiRequest.js`
+- Screen/components under `src/pages` and `src/components`
 
-## How can I deploy this project?
+## Current Scope and Notes
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+- This project is focused on frontend UX and integration points.
+- Secure password storage, encryption strategy, and persistence are backend responsibilities in your separate server project.
+- Keep API URL and auth/token behavior aligned between both repos.
 
-## Can I connect a custom domain to my Lovable project?
+## Documentation
 
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+- Frontend project notes: [`docs/PROJECT_DOCUMENTATION.md`](docs/PROJECT_DOCUMENTATION.md)

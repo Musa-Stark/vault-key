@@ -1,0 +1,191 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+@layer base {
+  :root {
+    --background: 222 47% 11%;
+    --foreground: 210 40% 98%;
+
+    --card: 217 33% 17%;
+    --card-foreground: 210 40% 98%;
+    --card-hover: 217 33% 20%;
+
+    --popover: 217 33% 17%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 217 91% 60%;
+    --primary-foreground: 222 47% 11%;
+
+    --secondary: 215 28% 25%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 215 28% 20%;
+    --muted-foreground: 215 20% 55%;
+
+    --accent: 142 71% 45%;
+    --accent-foreground: 222 47% 11%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 215 28% 22%;
+    --input: 215 28% 18%;
+    --ring: 217 91% 60%;
+
+    --radius: 0.75rem;
+
+    --warning: 38 92% 50%;
+    --warning-foreground: 222 47% 11%;
+
+    --surface: 222 47% 14%;
+    --surface-foreground: 210 40% 98%;
+
+    --gradient-primary: linear-gradient(135deg, hsl(217 91% 60%), hsl(250 80% 60%));
+    --gradient-accent: linear-gradient(135deg, hsl(142 71% 45%), hsl(172 66% 50%));
+    --gradient-card: linear-gradient(145deg, hsl(217 33% 17%), hsl(222 47% 14%));
+
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+    --shadow-lg: 0 10px 25px -3px rgb(0 0 0 / 0.5), 0 4px 6px -4px rgb(0 0 0 / 0.4);
+    --shadow-glow: 0 0 20px -5px hsl(217 91% 60% / 0.3);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-family: 'Inter', sans-serif;
+  }
+
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0px 1000px hsl(215 28% 18%) inset;
+    -webkit-text-fill-color: hsl(210 40% 98%);
+    transition: background-color 5000s ease-in-out 0s;
+  }
+}
+
+@layer components {
+  .vault-card {
+    @apply bg-card rounded-xl border border-border p-5 transition-all duration-200 ease-in-out;
+    box-shadow: var(--shadow-sm);
+  }
+  .vault-card:hover {
+    background-color: hsl(var(--card-hover));
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
+  }
+
+  .vault-input {
+    @apply w-full bg-input text-foreground border border-border rounded-xl px-4 py-3 text-sm placeholder:text-muted-foreground transition-all duration-200 outline-none;
+  }
+  .vault-input:focus {
+    @apply border-primary ring-2 ring-primary/20;
+  }
+
+  .vault-btn-primary {
+    @apply px-6 py-3 rounded-xl text-sm font-semibold transition-all duration-200 ease-in-out;
+    background: var(--gradient-primary);
+    color: hsl(var(--foreground));
+  }
+  .vault-btn-primary:hover {
+    transform: scale(1.02);
+    box-shadow: var(--shadow-glow);
+  }
+  .vault-btn-primary:active {
+    transform: scale(0.98);
+  }
+
+  .vault-btn-secondary {
+    @apply px-6 py-3 rounded-xl text-sm font-medium bg-secondary text-secondary-foreground border border-border transition-all duration-200;
+  }
+  .vault-btn-secondary:hover {
+    @apply bg-muted;
+    transform: scale(1.01);
+  }
+
+  .vault-btn-ghost {
+    @apply px-3 py-2 rounded-lg text-sm text-muted-foreground transition-all duration-200;
+  }
+  .vault-btn-ghost:hover {
+    @apply text-foreground bg-secondary;
+  }
+
+  .vault-btn-icon {
+    @apply p-2 rounded-lg text-muted-foreground transition-all duration-200;
+  }
+  .vault-btn-icon:hover {
+    @apply text-foreground bg-secondary;
+  }
+
+  .vault-badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary;
+  }
+
+  .vault-overlay {
+    @apply fixed inset-0 z-50 flex items-center justify-center;
+    background: rgb(0 0 0 / 0.6);
+    backdrop-filter: blur(8px);
+    animation: fadeIn 0.2s ease-out;
+  }
+
+  .vault-modal {
+    @apply bg-card border border-border rounded-2xl p-6 w-full max-w-md mx-4;
+    box-shadow: var(--shadow-lg);
+    animation: scaleIn 0.2s ease-out;
+  }
+
+  .vault-sidebar-item {
+    @apply flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm text-muted-foreground transition-all duration-200 cursor-pointer;
+  }
+  .vault-sidebar-item:hover {
+    @apply text-foreground bg-secondary;
+  }
+  .vault-sidebar-item.active {
+    @apply text-primary bg-primary/10 font-medium;
+  }
+
+  .vault-skeleton {
+    @apply bg-secondary rounded-xl animate-pulse;
+  }
+
+  .vault-toast {
+    @apply fixed bottom-6 right-6 z-[100] px-5 py-3 rounded-xl text-sm font-medium border border-border;
+    box-shadow: var(--shadow-lg);
+    animation: slideUp 0.3s ease-out;
+  }
+  .vault-toast.success {
+    @apply bg-accent/10 text-accent border-accent/20;
+  }
+  .vault-toast.error {
+    @apply bg-destructive/10 text-destructive border-destructive/20;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0; transform: translateY(10px); }
+}

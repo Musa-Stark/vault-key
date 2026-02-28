@@ -1,6 +1,7 @@
 export const metadata = {
-  title: "Vault Key",
+  title: "VaultX",
   description: "Secure password vault",
+  icon: "/shield.png"
 };
 
 import "./globals.css";

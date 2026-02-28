@@ -16,7 +16,6 @@ const DashboardPage = ({ onLock, onLogout }) => {
     unlockData,
   } = useAuth();
 
-  console.log(passwords)
 
   const [activeView, setActiveView] = useState("passwords");
   const [activeCategory, setActiveCategory] = useState("All");

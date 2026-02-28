@@ -26,7 +26,6 @@ const RegisterPage = ({ onRegister, onSwitchToLogin }) => {
     setIsDisabled(true);
 
     const response = await apiCall(data, "POST", "/auth/register");
-    console.log(response);
     if (response.success) {
       localStorage.setItem("token", response.data.token);
       showToast("Registered successfully");

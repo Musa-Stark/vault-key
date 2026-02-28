@@ -61,7 +61,7 @@ const PasswordCard = ({
         </button>
       </div>
 
-      <div className="flex items-center gap-1 mt-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+      <div className="flex items-center gap-1 mt-3">
         <button
           onClick={() => onEdit(_id)}
           className="vault-btn-ghost text-xs flex items-center gap-1"
@@ -70,7 +70,7 @@ const PasswordCard = ({
         </button>
         <button
           onClick={() => onDelete(_id)}
-          className="vault-btn-ghost text-xs flex items-center gap-1 hover:!text-destructive"
+          className="vault-btn-ghost text-xs flex items-center gap-1 !text-destructive"
         >
           <Trash2 className="w-3 h-3" /> Delete
         </button>

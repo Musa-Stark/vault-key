@@ -9,9 +9,9 @@ const navItems = [
 const Sidebar = ({ activeView, onNavigate, activeCategory, onCategoryChange }) => {
     const [mobileOpen, setMobileOpen] = useState(false);
     const content = (<div className="flex flex-col h-full">
-      <div className="flex items-center gap-2 px-4 py-5 border-b border-border">
+      <div className="flex items-center justify-center gap-2 px-4 py-5 border-b border-border">
         <Lock className="w-6 h-6 text-primary"/>
-        <span className="text-lg font-bold text-foreground">VaultX</span>
+        <span className="text-lg text-center font-bold text-foreground">VaultX</span>
       </div>
 
       <nav className="flex-1 p-3 space-y-1">
@@ -31,7 +31,7 @@ const Sidebar = ({ activeView, onNavigate, activeCategory, onCategoryChange }) =
     </div>);
     return (<>
       {/* Mobile toggle */}
-      <button onClick={() => setMobileOpen(true)} className="lg:hidden fixed top-4 left-4 z-50 vault-btn-icon bg-card border border-border">
+      <button onClick={() => setMobileOpen(true)} className="lg:hidden fixed top-[12px] left-4 z-50 vault-btn-icon bg-card border border-border">
         <Menu className="w-5 h-5"/>
       </button>
 
@@ -39,7 +39,7 @@ const Sidebar = ({ activeView, onNavigate, activeCategory, onCategoryChange }) =
       {mobileOpen && (<div className="lg:hidden fixed inset-0 z-40 bg-black/50" onClick={() => setMobileOpen(false)}>
           <div className="w-64 h-full bg-surface border-r border-border" onClick={(e) => e.stopPropagation()} style={{ animation: "slideInLeft 0.2s ease-out" }}>
             <button onClick={() => setMobileOpen(false)} className="absolute top-4 right-4 vault-btn-icon">
-              <X className="w-5 h-5"/>
+              <X className="w-7 h-7 text-red-400"/>
             </button>
             {content}
           </div>

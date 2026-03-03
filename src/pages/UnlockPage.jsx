@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { Lock, ShieldCheck, Loader2 } from "lucide-react";
+import { Lock, ShieldCheck, Loader2, Eye, EyeOff } from "lucide-react";
 import { apiCall } from "@/lib/apiRequest";
 import { useToast } from "@/contexts/ToastContext";
 
 const UnlockPage = ({ onUnlock }) => {
   const [masterPassword, setMasterPassword] = useState("");
+  const [showMasterPassword, setShowMasterPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { showToast } = useToast();
 
@@ -49,15 +50,38 @@ const UnlockPage = ({ onUnlock }) => {
           <div className="relative">
             <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <input
-              type="password"
+              type={showMasterPassword ? "text" : "password"}
               placeholder="Master password"
               value={masterPassword}
               onChange={(e) => setMasterPassword(e.target.value)}
-              className="vault-input pl-10 text-center"
+              className="vault-input pl-10 pr-10 text-center"
               autoFocus
               required
             />
+            <button
+              type="button"
+              onClick={() => setShowMasterPassword((prev) => !prev)}
+              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+              aria-label={
+                showMasterPassword
+                  ? "Hide master password"
+                  : "Show master password"
+              }
+            >
+              {showMasterPassword ? (
+                <EyeOff className="w-4 h-4" />
+              ) : (
+                <Eye className="w-4 h-4" />
+              )}
+            </button>
           </div>
+          <button
+            type="button"
+            onClick={() => console.log("clicked")}
+            className="text-sm text-primary hover:underline font-medium"
+          >
+            Forgot password?
+          </button>
           <button
             type="submit"
             className={`vault-btn-primary w-full flex items-center justify-center gap-2 ${isDisabled && "opacity-50 hover:scale-100 cursor-not-allowed"}`}

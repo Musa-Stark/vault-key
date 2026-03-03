@@ -2,6 +2,8 @@ import { useState } from "react";
 import {
   ArrowLeft,
   ArrowRight,
+  Eye,
+  EyeOff,
   Loader2,
   Lock,
   Mail,
@@ -21,6 +23,8 @@ const RegisterPage = ({ onRegister, onSwitchToLogin }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [masterPassword, setMasterPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showMasterPassword, setShowMasterPassword] = useState(false);
   const [otp, setOtp] = useState("");
   const [showOtpStep, setShowOtpStep] = useState(false);
   const [isRegistering, setIsRegistering] = useState(false);
@@ -38,7 +42,7 @@ const RegisterPage = ({ onRegister, onSwitchToLogin }) => {
     
     const data = { name, email, password, masterPassword };
     
-    const response = await apiCall(data, "POST", "/auth/sendOTP");
+    const response = await apiCall(data, "POST", "/auth/registerSendOTP");
     if (response.success) {
       showToast("OTP sent");
       setIsRegistering(false);
@@ -129,24 +133,52 @@ const RegisterPage = ({ onRegister, onSwitchToLogin }) => {
               <div className="relative">
                 <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <input
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   placeholder="Password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="vault-input pl-10"
+                  className="vault-input pl-10 pr-10"
                   required
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? (
+                    <EyeOff className="w-4 h-4" />
+                  ) : (
+                    <Eye className="w-4 h-4" />
+                  )}
+                </button>
               </div>
               <div className="relative">
                 <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <input
-                  type="password"
+                  type={showMasterPassword ? "text" : "password"}
                   placeholder="Master password"
                   value={masterPassword}
                   onChange={(e) => setMasterPassword(e.target.value)}
-                  className="vault-input pl-10"
+                  className="vault-input pl-10 pr-10"
                   required
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowMasterPassword((prev) => !prev)}
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                  aria-label={
+                    showMasterPassword
+                      ? "Hide master password"
+                      : "Show master password"
+                  }
+                >
+                  {showMasterPassword ? (
+                    <EyeOff className="w-4 h-4" />
+                  ) : (
+                    <Eye className="w-4 h-4" />
+                  )}
+                </button>
               </div>
             </div>
 

@@ -19,9 +19,9 @@ const AppContent = () => {
       <RegisterPage
         onRegister={login}
         onSwitchToLogin={() => setShowRegister(false)}
-      />
-    ) : (
-      <LoginPage
+        />
+      ) : (
+        <LoginPage
         onLogin={login}
         onSwitchToRegister={() => setShowRegister(true)}
       />

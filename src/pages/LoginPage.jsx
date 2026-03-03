@@ -146,6 +146,7 @@ const LoginPage = ({ onLogin, onSwitchToRegister }) => {
         showToast("Password updated successfully");
         setNewPassword("");
         setConfirmNewPassword("");
+        setForgotPasswordStep("login");
       } else {
         showToast(response.message, "fail");
       }
